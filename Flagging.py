@@ -34,8 +34,13 @@ while scount <= slen:
   pt = PIPoint.FindPIPoint(piServer, sensor)  
   name = pt.Name.lower()
   current_value = pt.CurrentValue()
+  str_value = str(current_value.Value)
 
-  print ('\n Current value of {0}: {1}'.format(sensor, current_value))
-  print (current_value)
-  if current_value == "0":
+  print ('\n Current value of {0}: {1}'.format(sensor, str_value))
+
+  if str_value == "Calc Failed":
+    print('RED')
+  if str_value == '0.0':
+    print('RED')
+  if str_value == 'I/O Timeout':
     print('RED')

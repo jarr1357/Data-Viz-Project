@@ -1,0 +1,22 @@
+Red: 
+data 0
+data same for past 7 days
+
+data well outside of range
+
+Yellow:
+data same for 25% of past 7 days
+
+suspected out of range data
+
+else:
+Green
+
+#pt = PIPoint.FindPIPoint(piServer, "WCHPCOGEN_ACW.COGEN1.UTILITY.KW.PRESENT_VALUE")  
+#name = pt.Name.lower() 
+#
+#timerange = AFTimeRange("19/11/05 11:56 PM", "19/11/06 2:53 AM")  
+#recorded = pt.RecordedValues(timerange, AFBoundaryType.Inside, "", False)  
+#print('\nShowing PI Tag RecordedValues from {0}'.format(name))  
+#for event in recorded:  
+#  print('{0} value: {1}'.format(event.Timestamp.LocalTime,event.Value))

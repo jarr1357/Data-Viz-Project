@@ -36,3 +36,6 @@ while scount <= slen:
   current_value = pt.CurrentValue()
 
   print ('\n Current value of {0}: {1}'.format(sensor, current_value))
+  print (current_value)
+  if current_value == "0":
+    print('RED')

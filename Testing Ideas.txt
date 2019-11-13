@@ -12,6 +12,29 @@ suspected out of range data
 else:
 Green
 
+Integral of a cetain timeframe
+Example total flow over x hours
+
+Derivative
+
+Instattaneous rate of change
+Examples watched for sensor spikes over time
+
+Proportional
+Current range vs setpoint
+Eg current voltage over 0(setpoint)
+
+Mean median mode
+
+Average over time
+Filters out sensor spikes
+
+Reoccurring data patterns against time flow
+Eg solar panels over 24 hour period
+
+Detect sensor changes pole to pole
+
+
 #pt = PIPoint.FindPIPoint(piServer, "WCHPCOGEN_ACW.COGEN1.UTILITY.KW.PRESENT_VALUE")  
 #name = pt.Name.lower() 
 #

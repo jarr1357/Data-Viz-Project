@@ -1,23 +1,5 @@
-import sys  
-import clr
+from Ingestion import *
 import pandas as pd
-
-#Connecting to ProcessBook using .NET
-
-sys.path.append(r'C:\Program Files (x86)\PIPC\AF\PublicAssemblies\4.0')    
-clr.AddReference('OSIsoft.AFSDK')  
-  
-from OSIsoft.AF import *  
-from OSIsoft.AF.PI import *  
-from OSIsoft.AF.Asset import *  
-from OSIsoft.AF.Data import *  
-from OSIsoft.AF.Time import *  
-from OSIsoft.AF.UnitsOfMeasure import *
-
-#Connecting to PiServer
-
-piServers = PIServers()    
-piServer = piServers.DefaultPIServer;
 
 #Loading the Sensor List excel sheet
 
@@ -25,16 +7,13 @@ df = pd.read_excel (r'sensor_list.xlsx')
 sensorlist = pd.DataFrame(df, columns= ['Name'])
 
 scount = 3 #sensor count starts at row 3
-slen = len(sensorlist.index)-1
+slen = len(sensorlist.index)-1 #-1 for zero offset
 
-while scount <= slen:
+while scount <= slen: #goes through every sensor
   sensor = sensorlist.at[scount, 'Name']
   scount = scount + 1
-  
-  pt = PIPoint.FindPIPoint(piServer, sensor)  
-  name = pt.Name.lower()
-  current_value = pt.CurrentValue()
-  str_value = str(current_value.Value)
+
+  str_value = CurrentValue(sensor) #requests current values of sensors as a string
 
   print ('\n Current value of {0}: {1}'.format(sensor, str_value))
 

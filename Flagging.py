@@ -5,4 +5,6 @@ def Conditions(str_value):
     flag = 'RED'
   elif str_value == 'I/O Timeout':
     flag = 'RED'
+  else:
+    flag = 'GREEN'
   return(flag)

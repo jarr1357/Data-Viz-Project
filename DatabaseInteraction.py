@@ -1,19 +1,18 @@
 import sqlite3
+
 conn = sqlite3.connect('SensorFlags.db')
 
-c = conn.cursor()
-
-def MakeTable():
+cursor = conn.cursor()
+    
+def WriteValue(name, current_value, condition):
     try:
-        c.execute('''CREATE TABLE Sensors
-             (name, current_value, flag)''')
+        commandstring = '''UPDATE Sensors SET Current_Value = ? ,Condition = ? WHERE Tag_Name = ?'''
+        values = (current_value, condition, name)
+        cursor.execute(commandstring, values)
     except:
-        print("Already a table")
-
-def WriteValue(name, current_value, flag):
-    commandstring = ("INSERT INTO Sensors VALUES ('{0}','{1}') WHERE name = {2}".format(current_value, flag, name))
-    c.execute(commandstring)
+        print("No table!")
 
 def CommitClose():
     conn.commit()
     conn.close()
+    return('Closed SQL connection!')

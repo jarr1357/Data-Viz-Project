@@ -12,6 +12,11 @@ def WriteValue(name, current_value, condition):
     except:
         print("No table!")
 
+def ReadNames():
+    cursor.execute('''SELECT Tag_Name FROM Sensors''')
+    nameList = cursor.fetchall()
+    return(nameList)
+
 def CommitClose():
     conn.commit()
     conn.close()

@@ -33,6 +33,3 @@ def RecordedValues(sensor, startTime, endTime):
     recorded = pt.RecordedValues(timerange, AFBoundaryType.Inside, "", False)    
     return (recorded) #recorded is a list of 'event' enteries
 
-test = RecordedValues('ACCE.LEVEL5.PXCM5_ACCE.L5W.W11.PRESENT_VALUE','2019/01/01 11:56 PM','2019/01/02 11:56 PM')
-for event in test:
-    print(event)

@@ -1,24 +1,19 @@
 from PiConnection import *
-from DatabaseInteraction import *
+from DatabaseConnection import *
 from Flagging import *
-import pandas as pd
 
-#Loading the Sensor List excel sheet
-
-df = pd.read_excel (r'sensor_list.xlsx')
-sensorlist = pd.DataFrame(df, columns= ['Name'])
-
-scount = 0 #sensor count starts at row 3
-slen = len(sensorlist.index)-1 #-1 for zero offset
+nameList = ReadNames()
 
 print ('Writing to database')
-while scount <= slen: #goes through every sensor
-  sensor = sensorlist.at[scount, 'Name']
-  scount = scount + 1
+for sensor in nameList:
 
-  str_value = CurrentValue(sensor) #requests current values of sensors as a string
+  str_sensor = ''.join(sensor)
+  print(str_sensor)
 
-  WriteValue(sensor, str_value, Conditions(str_value))
+  str_value = CurrentValue(str_sensor) #requests current values of sensors as a string
+  print(str_value)
+
+  WriteValue(str_sensor, str_value, Conditions(str_value))
 
 print(CommitClose())
 

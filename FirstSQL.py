@@ -28,6 +28,4 @@ def MakeTable():
 
 MakeTable()
 
-conn.commit()
-conn.close()
-print('Connection to SQL closed')
+print(CommitClose())

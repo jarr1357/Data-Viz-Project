@@ -1,6 +1,6 @@
 from PiConnection import *
 from DatabaseConnection import *
-from Flagging import *
+from Conditions import *
 
 nameList = ReadNames()
 

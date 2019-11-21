@@ -1,7 +1,7 @@
 import sqlite3
-import pandas as pd
 
-from DatabaseInteraction import CommitClose
+from DatabaseConnection import CommitClose
+from PiConnection import ReadAllTags
 
 conn = sqlite3.connect('SensorFlags.db')
 
@@ -13,19 +13,15 @@ def MakeTable():
     except:
         print("Already a table")
 
-    df = pd.read_excel (r'sensor_list.xlsx')
-    sensorlist = pd.DataFrame(df, columns= ['Name'])
+    sensorlist = ReadAllTags()
 
-    scount = 0 #sensor count starts at row 3
-    slen = len(sensorlist.index)-1 #-1 for zero offset
-
-    while scount <= slen: #goes through every sensor
-        sensor = sensorlist.at[scount, 'Name']
-        scount = scount + 1
-
-        cursor.execute('INSERT INTO Sensors(Tag_Name) VALUES(?)', (sensor,))
-        print(sensor)
+    for sensor in sensorlist: #goes through every sensor
+        str_sensor = ''.join(sensor)
+        cursor.execute('INSERT INTO Sensors(Tag_Name) VALUES(?)', (str_sensor,))
+        print(str_sensor)
 
 MakeTable()
 
-print(CommitClose())
+conn.commit()
+conn.close()
+print('Closed SQL connection!')

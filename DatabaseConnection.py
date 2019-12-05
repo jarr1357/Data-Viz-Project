@@ -17,6 +17,10 @@ def ReadNames():
     nameList = cursor.fetchall()
     return(nameList)
 
+def PassCommand(commandstring, values):
+    cursor.execute(commandtring, values)
+    return('Complete')
+
 def CommitClose():
     conn.commit()
     conn.close()

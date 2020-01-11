@@ -1,9 +1,13 @@
 from PiConnection import *
 from DatabaseConnection import *
 from Conditions import *
+from FirstSQL import *
 
-nameList = ReadNames()
-
+try:
+  nameList = ReadNames()
+except
+  MakeTable()
+  
 print ('Writing to database')
 for sensor in nameList:
 

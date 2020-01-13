@@ -1,14 +1,20 @@
 from PiConnection import *
 from DatabaseConnection import *
 from Conditions import *
-from FirstSQL import *
+from Logging import *
 
-try:
-  nameList = ReadNames()
-except
-  MakeTable()
+while True:
+  try:
+    nameList = ReadNames()
+    logger('Database found')
+    CompareSensors()
+    logger('CompareSensors complete - Any new sensors added')
+    break
+  except:
+    logger('Database not found - constructing new')
+    FirstRun()
   
-print ('Writing to database')
+logger('Writing to database')
 for sensor in nameList:
 
   str_sensor = ''.join(sensor)
@@ -19,6 +25,6 @@ for sensor in nameList:
 
   WriteValue(str_sensor, str_value, Conditions(str_value))
 
-print(CommitClose())
+CommitClose()
 
 

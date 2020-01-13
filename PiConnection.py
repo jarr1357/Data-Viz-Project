@@ -1,5 +1,7 @@
 import sys  
 import clr
+import time
+from Logging import *
 
 #Connecting to ProcessBook using .NET
 
@@ -14,9 +16,18 @@ from OSIsoft.AF.Time import *
 from OSIsoft.AF.UnitsOfMeasure import *
 
 #Connecting to PiServer
-piServers = PIServers()    
-piServer = piServers.DefaultPIServer;
-
+timer = 1
+while True:
+    try:
+        piServers = PIServers()    
+        piServer = piServers.DefaultPIServer;
+        break
+    except:
+        logger("piServer could not be found. Retrying in {0} seconds.".format(timer))
+        time.sleep(timer)
+        if timer < 60:
+            timer = timer * 1.5
+        
 #finds all tag names in system
 def ReadAllTags():
     id_num = 0

@@ -1,9 +1,11 @@
 import sqlite3
+from PiConnection import ReadAllTags
+from Logging import *
 
 conn = sqlite3.connect('SensorFlags.db')
 
 cursor = conn.cursor()
-    
+
 def WriteValue(name, current_value, condition):
     try:
         commandstring = '''UPDATE Sensors SET Current_Value = ? ,Condition = ? WHERE Tag_Name = ?'''
@@ -21,7 +23,33 @@ def PassCommand(commandstring, values):
     cursor.execute(commandtring, values)
     return('Complete')
 
+def MakeTable():
+    try:
+        cursor.execute('''CREATE TABLE Sensors(Tag_Name, Flag, Current_Value, Condition)''')
+    except:
+        logger('Already a "Sensors" table')
+
+def CompareSensors():
+    sensorlist = ReadAllTags()
+
+    for sensor in sensorlist: #goes through every sensor
+        str_sensor = ''.join(sensor)
+        cursor.execute('SELECT Tag_Name FROM Sensors WHERE Tag_Name == (?)', (str_sensor,))
+        tagexist = cursor.fetchall()
+        try:
+            tagexist = str(tagexist[0])
+            print('Tag exists - {0}'.format(tagexist))
+        except:
+            cursor.execute('INSERT INTO Sensors(Tag_Name) VALUES(?)', (str_sensor,))
+            print(str_sensor)
+            logger("Inserting new tag into database - {0}".format(str_sensor))
+
 def CommitClose():
     conn.commit()
     conn.close()
-    return('Closed SQL connection!')
+    logger('Closed SQL connection!')
+    return()
+
+def FirstRun(): 
+    MakeTable()
+    CompareSensors()

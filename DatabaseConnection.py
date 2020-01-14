@@ -45,13 +45,12 @@ def CompareSensors():
         tagexist = cursor.fetchall()
         try:
             tagexist = str(tagexist[0])
-            print('Tag exists - {0}'.format(tagexist))
         except:
             cursor.execute('INSERT INTO Sensors(Tag_Name) VALUES(?)', (str_sensor,))
             print(str_sensor)
             WriteFlag(str_sensor, Flagging(str_sensor))
             logger("Inserting new tag into database - {0}".format(str_sensor))
-    logger('CompareSensors complete - Any new sensors added')
+    logger('CompareSensors complete!')
 
 def CommitClose():
     conn.commit()

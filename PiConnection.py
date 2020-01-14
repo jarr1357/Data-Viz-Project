@@ -65,7 +65,7 @@ def CurrentValue(sensor):
 #pulls a range of values from the requested sensor
 def RecordedValues(sensor, startTime, endTime):
     pt = PIPoint.FindPIPoint(piServer, sensor)  
-    timerange = AFTimeRange(startTime, endTime)  #time in format yy/mm/dd 11:56 PM start,end str
+    timerange = AFTimeRange(startTime, endTime)  #time in format "yyyy/mm/dd hh:mm AM/PM"
     recorded = pt.RecordedValues(timerange, AFBoundaryType.Inside, "", False)
     timelist = []
     valuelist = []
@@ -75,7 +75,9 @@ def RecordedValues(sensor, startTime, endTime):
             valuelist.append(float(event.Value))
         except:
             valuelist.append(event.Value)
-    df = pd.DataFrame(valuelist, timelist)
+    data = {'Time':timelist,
+            'Value':valuelist}
+    df = pd.DataFrame(data)
     return (df) #returns dataframe of times and values
 
 #print(RecordedValues('WCCGBTUCWS2_Return_Temperature.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))

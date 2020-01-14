@@ -18915,3 +18915,7 @@
 2020-01-14 12:19:01 - Connected to PiServer
 2020-01-14 12:19:35 - CompareSensors complete - Any new sensors added
 2020-01-14 12:19:35 - Writing conditions to database
+2020-01-14 12:23:30 - Connected to PiServer
+2020-01-14 12:23:56 - CompareSensors complete - Any new sensors added
+2020-01-14 12:23:56 - Writing conditions to database
+2020-01-14 12:24:42 - Closed SQL connection!

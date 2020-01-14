@@ -59,8 +59,15 @@ def ReadAllTags():
 def CurrentValue(sensor): 
     pt = PIPoint.FindPIPoint(piServer, sensor)  
     current_value = pt.CurrentValue()
-    str_value = str(current_value.Value)
-    return (str_value)
+    #test = pt.GetAttribute(UOM)
+    #print(test)
+##    uom = pt.UOM()
+##    print(uom)
+    try:
+        ret_value = float(current_value.Value)
+    except:
+        ret_value = str(current_value.Value)
+    return (ret_value)
 
 #pulls a range of values from the requested sensor
 def RecordedValues(sensor, startTime, endTime):
@@ -80,4 +87,5 @@ def RecordedValues(sensor, startTime, endTime):
     df = pd.DataFrame(data)
     return (df) #returns dataframe of times and values
 
-#print(RecordedValues('WCCGBTUCWS2_Return_Temperature.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
+#print(RecordedValues('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
+print(CurrentValue('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE'))

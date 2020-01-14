@@ -1,10 +1,13 @@
 import sys  
 import clr
 import time
+
+import pandas as pd
+import numpy as np
+
 from Logging import *
 
 #Connecting to ProcessBook using .NET
-
 sys.path.append(r'C:\Program Files (x86)\PIPC\AF\PublicAssemblies\4.0')    
 clr.AddReference('OSIsoft.AFSDK')  
   
@@ -15,18 +18,24 @@ from OSIsoft.AF.Data import *
 from OSIsoft.AF.Time import *  
 from OSIsoft.AF.UnitsOfMeasure import *
 
+#Setting up PiServer connection
+piServers = PIServers()    
+piServer = piServers.DefaultPIServer;
+
 #Connecting to PiServer
 timer = 1
 while True:
     try:
-        piServers = PIServers()    
-        piServer = piServers.DefaultPIServer;
+        pt = PIPoint.FindPIPoint(piServer, 'SINUSOID') #testing integrated PiServer sensor
+        logger("Connected to PiServer")
         break
     except:
-        logger("piServer could not be found. Retrying in {0} seconds.".format(timer))
+        logger("PiServer could not be found. Retrying in {0} seconds.".format(timer))
         time.sleep(timer)
         if timer < 60:
-            timer = timer * 1.5
+            timer = timer * 2
+        if timer > 60:
+            timer = 60
         
 #finds all tag names in system
 def ReadAllTags():
@@ -49,7 +58,6 @@ def ReadAllTags():
 #pulls the current value of the requested sensor
 def CurrentValue(sensor): 
     pt = PIPoint.FindPIPoint(piServer, sensor)  
-   # name = pt.Name.lower()
     current_value = pt.CurrentValue()
     str_value = str(current_value.Value)
     return (str_value)
@@ -57,8 +65,17 @@ def CurrentValue(sensor):
 #pulls a range of values from the requested sensor
 def RecordedValues(sensor, startTime, endTime):
     pt = PIPoint.FindPIPoint(piServer, sensor)  
-  #  name = pt.Name.lower()
     timerange = AFTimeRange(startTime, endTime)  #time in format yy/mm/dd 11:56 PM start,end str
-    recorded = pt.RecordedValues(timerange, AFBoundaryType.Inside, "", False)    
-    return (recorded) #recorded is a list of 'event' enteries
+    recorded = pt.RecordedValues(timerange, AFBoundaryType.Inside, "", False)
+    timelist = []
+    valuelist = []
+    for event in recorded: #converting AFValues object into panda dataframe
+        timelist.append(str(event.Timestamp.LocalTime))
+        try:
+            valuelist.append(float(event.Value))
+        except:
+            valuelist.append(event.Value)
+    df = pd.DataFrame(valuelist, timelist)
+    return (df) #returns dataframe of times and values
 
+#print(RecordedValues('WCCGBTUCWS2_Return_Temperature.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))

@@ -1,10 +1,21 @@
 def Conditions(str_value):
   if str_value == "Calc Failed":
-    flag ='RED'
+    condition ='RED'
   elif str_value == '0.0':
-    flag = 'RED'
+    condition = 'RED'
   elif str_value == 'I/O Timeout':
-    flag = 'RED'
+    condition = 'RED'
   else:
-    flag = 'GREEN'
-  return(flag)
+    condition = 'GREEN'
+  return(condition)
+
+def Flagging(sensor_name):
+  flags = []
+  if sensor_name.find("PI-SERVER") != -1:
+    flags.append('PI')
+  if sensor_name.find("ACCE") != -1:
+    flags.append('ACCE')
+  if sensor_name.find("COGEN") != -1:
+    flags.append('COGEN')
+  sentflag = (str(flags))[1:-1]
+  return(sentflag)

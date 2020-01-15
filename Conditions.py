@@ -1,4 +1,13 @@
-def Conditions(str_value):
+import datetime
+from PiConnection import *
+
+def ConstantValue(sensor):
+  today = datetime.datetime.now()
+  print(today)
+  #df = RecordedValues(sensor, today, past)
+  return('YELLOW')
+
+def Conditions(sensor, str_value):
   if str_value == "Calc Failed":
     condition ='RED'
   elif str_value == '0.0':
@@ -19,3 +28,4 @@ def Flagging(sensor_name):
     flags.append('COGEN')
   sentflag = (str(flags))[1:-1]
   return(sentflag)
+

@@ -6,21 +6,21 @@ from Logging import *
 conn = sqlite3.connect('SensorFlags.db')
 cursor = conn.cursor()
 
-def WriteCondition(name, current_value, condition):
+def WriteInitial(name, descriptor, flag, uom, typical):
     try:
-        commandstring = '''UPDATE Sensors SET Current_Value = ? ,Condition = ? WHERE Tag_Name = ?'''
-        values = (current_value, condition, name)
+        commandstring = '''UPDATE Sensors SET Descriptor = ?,Flag = ?,UOM = ?,Typical = ? WHERE Tag_Name = ?'''
+        values = (descriptor, flag, uom, typical, name)
         cursor.execute(commandstring, values)
     except:
-        print("No table!")
+        logger("No table! This should never happen.")
 
-def WriteFlag(name, flag):
+def WriteCondition(name, condition):
     try:
-        commandstring = '''UPDATE Sensors SET Flag = ? WHERE Tag_Name = ?'''
-        values = (flag, name)
+        commandstring = '''UPDATE Sensors SET Condition = ? WHERE Tag_Name = ?'''
+        values = (condition, name)
         cursor.execute(commandstring, values)
     except:
-        print("No table!")
+        logger("No table! This should never happen.")
 
 def ReadNames():
     cursor.execute('''SELECT Tag_Name FROM Sensors''')
@@ -33,7 +33,7 @@ def PassCommand(commandstring, values):
 
 def MakeTable():
     try:
-        cursor.execute('''CREATE TABLE Sensors(Tag_Name, Flag, Current_Value, Condition)''')
+        cursor.execute('''CREATE TABLE Sensors(Tag_Name, Descriptor, Flag, UOM, Typical, Condition)''')
     except:
         logger('Already a "Sensors" table')
 
@@ -47,8 +47,7 @@ def CompareSensors():
             tagexist = str(tagexist[0])
         except:
             cursor.execute('INSERT INTO Sensors(Tag_Name) VALUES(?)', (str_sensor,))
-            print(str_sensor)
-            WriteFlag(str_sensor, Flagging(str_sensor))
+            WriteInitial(str_sensor, GetDescriptor(str_sensor), Flagging(str_sensor), GetEU(str_sensor), GetTypicalValue(str_sensor))
             logger("Inserting new tag into database - {0}".format(str_sensor))
     logger('CompareSensors complete!')
 

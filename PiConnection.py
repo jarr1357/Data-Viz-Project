@@ -23,19 +23,20 @@ piServers = PIServers()
 piServer = piServers.DefaultPIServer;
 
 #Connecting to PiServer
-timer = 1
-while True:
-    try:
-        pt = PIPoint.FindPIPoint(piServer, 'SINUSOID') #testing integrated PiServer sensor
-        logger("Connected to PiServer")
-        break
-    except:
-        logger("PiServer could not be found. Retrying in {0} seconds.".format(timer))
-        time.sleep(timer)
-        if timer < 60:
-            timer = timer * 2
-        if timer > 60:
-            timer = 60
+def Connection(sensor):
+    timer = 1
+    while True:
+        try:
+            pt = PIPoint.FindPIPoint(piServer, sensor)
+            break
+        except:
+            logger("PiServer could not be found. Retrying in {0} seconds.".format(timer))
+            time.sleep(timer)
+            if timer < 60:
+                timer = timer * 2
+            if timer > 60:
+                timer = 60
+    return(pt)
         
 #finds all tag names in system
 def ReadAllTags():
@@ -44,7 +45,7 @@ def ReadAllTags():
     namelist = []
     while failure < 100: #number of non-existant ids accepted before ending the search
         try:
-            ppt = PIPoint.FindPIPoint(piServer, id_num) #pulls tag based off numeric id
+            ppt = Connection(id_num) #pulls tag based off numeric id
             name = ppt.ToString() #gets the name
             namelist.append(name) # adds to list
             id_num = id_num + 1 #increased id being requested
@@ -57,21 +58,18 @@ def ReadAllTags():
 
 #pulls the current value of the requested sensor
 def CurrentValue(sensor): 
-    pt = PIPoint.FindPIPoint(piServer, sensor)  
+    pt = Connection(sensor)  
     current_value = pt.CurrentValue()
-    #test = pt.GetAttribute(UOM)
-    #print(test)
-##    uom = pt.UOM()
-##    print(uom)
+    #print(current_value.Timestamp)
     try:
         ret_value = float(current_value.Value)
     except:
-        ret_value = str(current_value.Value)
+        ret_value = current_value.Value
     return (ret_value)
 
 #pulls a range of values from the requested sensor
 def RecordedValues(sensor, startTime, endTime):
-    pt = PIPoint.FindPIPoint(piServer, sensor)  
+    pt = Connection(sensor)  
     timerange = AFTimeRange(startTime, endTime)  #time in format "yyyy/mm/dd hh:mm AM/PM"
     recorded = pt.RecordedValues(timerange, AFBoundaryType.Inside, "", False)
     timelist = []
@@ -87,5 +85,33 @@ def RecordedValues(sensor, startTime, endTime):
     df = pd.DataFrame(data)
     return (df) #returns dataframe of times and values
 
+def GetTypicalValue(sensor):
+    pt = Connection(sensor)
+    attr = PICommonPointAttributes.TypicalValue
+
+    attr_list = list()
+    attr_list.append(attr)
+    pt.LoadAttributes(attr_list)
+    return(tag.GetAttribute(attr))
+
+def GetEU(sensor):
+    pt = Connection(sensor)
+    attr = PICommonPointAttributes.EngineeringUnits
+
+    attr_list = list()
+    attr_list.append(attr)
+    pt.LoadAttributes(attr_list)
+    return(tag.GetAttribute(attr))
+
+def GetDescriptor(sensor):
+    pt = Connection(sensor)
+    attr = PICommonPointAttributes.Descriptor
+
+    attr_list = list()
+    attr_list.append(attr)
+    pt.LoadAttributes(attr_list)
+    return(tag.GetAttribute(attr))
+    
 #print(RecordedValues('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
-print(CurrentValue('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE'))
+#print(CurrentValue('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE'))
+

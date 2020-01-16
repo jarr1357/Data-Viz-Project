@@ -21,6 +21,7 @@ from OSIsoft.AF.UnitsOfMeasure import *
 #Setting up PiServer connection
 piServers = PIServers()    
 piServer = piServers.DefaultPIServer;
+logger("piServer is {0}".format(piServer))
 
 #Connecting to PiServer
 def Connection(sensor):
@@ -92,7 +93,7 @@ def GetTypicalValue(sensor):
     attr_list = list()
     attr_list.append(attr)
     pt.LoadAttributes(attr_list)
-    return(tag.GetAttribute(attr))
+    return(pt.GetAttribute(attr))
 
 def GetEU(sensor):
     pt = Connection(sensor)
@@ -101,7 +102,7 @@ def GetEU(sensor):
     attr_list = list()
     attr_list.append(attr)
     pt.LoadAttributes(attr_list)
-    return(tag.GetAttribute(attr))
+    return(pt.GetAttribute(attr))
 
 def GetDescriptor(sensor):
     pt = Connection(sensor)
@@ -110,7 +111,7 @@ def GetDescriptor(sensor):
     attr_list = list()
     attr_list.append(attr)
     pt.LoadAttributes(attr_list)
-    return(tag.GetAttribute(attr))
+    return(pt.GetAttribute(attr))
     
 #print(RecordedValues('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
 #print(CurrentValue('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE'))

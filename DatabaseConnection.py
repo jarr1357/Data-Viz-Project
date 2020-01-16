@@ -1,6 +1,6 @@
 import sqlite3
-from PiConnection import ReadAllTags
-from Conditions import Flagging
+from PiConnection import *
+from Conditions import *
 from Logging import *
 
 conn = sqlite3.connect('SensorFlags.db')
@@ -47,7 +47,8 @@ def CompareSensors():
             tagexist = str(tagexist[0])
         except:
             cursor.execute('INSERT INTO Sensors(Tag_Name) VALUES(?)', (str_sensor,))
-            WriteInitial(str_sensor, GetDescriptor(str_sensor), Flagging(str_sensor), GetEU(str_sensor), GetTypicalValue(str_sensor))
+            WriteInitial(str_sensor, GetDescriptor(str_sensor), Flagging(str_sensor),
+                         GetEU(str_sensor), GetTypicalValue(str_sensor))
             logger("Inserting new tag into database - {0}".format(str_sensor))
     logger('CompareSensors complete!')
 

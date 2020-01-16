@@ -23,7 +23,7 @@ def WriteCondition(name, condition):
         logger("No table! This should never happen.")
 
 def ReadNames():
-    cursor.execute('''SELECT Tag_Name FROM Sensors''')
+    cursor.execute('''SELECT Tag_Name FROM Sensors WHERE Flag != "PI"''')
     nameList = cursor.fetchall()
     return(nameList)
 

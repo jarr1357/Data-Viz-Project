@@ -113,6 +113,6 @@ def GetDescriptor(sensor):
     pt.LoadAttributes(attr_list)
     return(pt.GetAttribute(attr))
     
-#print(RecordedValues('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
-#print(CurrentValue('WCHPCOGEN_WEPV1.STTP.PRESENT_VALUE'))
+#print(RecordedValues('ACCE.LEVEL1.PXCM11_ACCE.LLM1.VBM01.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
+#print(CurrentValue('ACCE.LEVEL1.PXCM11_ACCE.LLM1.VBM01.PRESENT_VALUE'))
 

@@ -4,7 +4,7 @@ from PiConnection import *
 def YellowCon(sensor):
 
   try:
-    dayspast = 10
+    dayspast = 5
     
     date = datetime.datetime.now()
     today = date.strftime('%Y-%m-%d %I:%M %p')
@@ -28,8 +28,6 @@ def RedCon(sensor):
   str_value = str(CurrentValue(sensor))
 
   if str_value == "Calc Failed":
-    condition = True
-  elif str_value == '0.0':
     condition = True
   elif str_value == 'I/O Timeout':
     condition = True

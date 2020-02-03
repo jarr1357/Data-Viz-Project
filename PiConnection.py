@@ -23,6 +23,10 @@ piServers = PIServers()
 piServer = piServers.DefaultPIServer;
 logger("piServer is {0}".format(piServer))
 
+#Used to test if a sensor is on the server
+def sensorTest(sensor):
+    pt = PIPoint.FindPIPoint(piServer, sensor)
+    
 #Connecting to PiServer
 def Connection(sensor):
     timer = 1
@@ -112,7 +116,79 @@ def GetDescriptor(sensor):
     attr_list.append(attr)
     pt.LoadAttributes(attr_list)
     return(pt.GetAttribute(attr))
+
+def GetMax(sensor, time):
+    
+    span = AFTimeSpan.Parse("{0}d".format(time))
+    timerange = AFTimeRange("*-{}d".format(time), "*") 
+    
+    pt = Connection(sensor)
+    summaries = pt.Summaries(timerange, span, AFSummaryTypes.Maximum, AFCalculationBasis.TimeWeighted, AFTimestampCalculation.Auto)
+    
+    for summary in summaries:  
+        for event in summary.Value:  
+            value = float(event.Value)
+    
+    return(value)
+
+def GetMin(sensor, time):
+    
+    span = AFTimeSpan.Parse("{0}d".format(time))
+    timerange = AFTimeRange("*-{}d".format(time), "*") 
+    
+    pt = Connection(sensor)
+    summaries = pt.Summaries(timerange, span, AFSummaryTypes.Minimum, AFCalculationBasis.TimeWeighted, AFTimestampCalculation.Auto)
+    
+    for summary in summaries:  
+        for event in summary.Value:  
+            value = float(event.Value)
+    
+    return(value)
+
+def GetAvg(sensor, time):
+    
+    span = AFTimeSpan.Parse("{0}d".format(time))
+    timerange = AFTimeRange("*-{}d".format(time), "*") 
+    
+    pt = Connection(sensor)
+    summaries = pt.Summaries(timerange, span, AFSummaryTypes.Average, AFCalculationBasis.TimeWeighted, AFTimestampCalculation.Auto)
+    
+    for summary in summaries:  
+        for event in summary.Value:  
+            value = float(event.Value)
+    
+    return(value)
+
+def GetPG(sensor, time):
+    
+    span = AFTimeSpan.Parse("{0}d".format(time))
+    timerange = AFTimeRange("*-{}d".format(time), "*") 
+    
+    pt = Connection(sensor)
+    summaries = pt.Summaries(timerange, span, AFSummaryTypes.PercentGood, AFCalculationBasis.TimeWeighted, AFTimestampCalculation.Auto)
+    
+    for summary in summaries:  
+        for event in summary.Value:  
+            value = float(event.Value)
+    
+    return(value)
+
+def GetSD(sensor, time):
+    
+    span = AFTimeSpan.Parse("{0}d".format(time))
+    timerange = AFTimeRange("*-{}d".format(time), "*") 
+    
+    pt = Connection(sensor)
+    summaries = pt.Summaries(timerange, span, AFSummaryTypes.StdDev, AFCalculationBasis.TimeWeighted, AFTimestampCalculation.Auto)
+    
+    for summary in summaries:  
+        for event in summary.Value:  
+            value = float(event.Value)
+    
+    return(value)
+
     
 #print(RecordedValues('ACCE.LEVEL1.PXCM11_ACCE.LLM1.VBM01.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
 #print(CurrentValue('ACCE.LEVEL1.PXCM11_ACCE.LLM1.VBM01.PRESENT_VALUE'))
 
+#print(GetPG('ACCE.PH.PXCM2_ACRS.WEATHERSTATION:SOLAR_RAD.PRESENT_VALUE',100)) 

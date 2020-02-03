@@ -3,24 +3,22 @@ from PiConnection import *
 
 def YellowCon(sensor):
 
-  try:
-    dayspast = 5
-    
-    date = datetime.datetime.now()
-    today = date.strftime('%Y-%m-%d %I:%M %p')
-    
-    past = date - timedelta(days=dayspast)
-    past = past.strftime('%Y-%m-%d %I:%M %p')
-    
-    df = RecordedValues(sensor, today, past)
+  dayspast = 10
+  value = CurrentValue(sensor)
 
-    if float(df.mean()) == CurrentValue(sensor):
-      condition = 1
-    else: condition = 3
+  try:
+    error = (GetAvg(sensor,dayspast)/value)*100
+    if (error == 100) and (value != 0.0 and value != 1.0):
+        condition = 1
+        
+    elif GetPG(sensor,dayspast) < 99:
+        condition = 2
+  
+    else: condition = False
 
   except:
-    condition = 2
-    
+      condition = False
+
   return(condition)
 
 def RedCon(sensor):
@@ -39,16 +37,13 @@ def Conditions(sensor):
 
   if RedCon(sensor):
     condition = 'RED'
-  else:  
-    yellowCase = YellowCon(sensor)
-    if yellowCase == 2:
-      condition = 'RED'
-    elif yellowCase == 1:
-      condition = 'YELLOW'
+  elif YellowCon(sensor) == 1:
+    condition = 'YELLOW - AVG'
+  elif YellowCon(sensor) == 2:
+    condition = 'YELLOW - PG'
+  else:
+    condition = 'GREEN'
 
-    else:
-      condition = 'GREEN'
-    
   return(condition)
 
 def Flagging(sensor_name):
@@ -72,3 +67,4 @@ def Flagging(sensor_name):
   
   return(sentflag)
 
+#Conditions('ACCE.PH.PXCM2_ACRS.WEATHERSTATION:SOLAR_RAD.PRESENT_VALUE')

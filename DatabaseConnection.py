@@ -50,6 +50,16 @@ def CompareSensors():
             WriteInitial(str_sensor, GetDescriptor(str_sensor), Flagging(str_sensor),
                          GetEU(str_sensor), GetTypicalValue(str_sensor))
             logger("Inserting new tag into database - {0}".format(str_sensor))
+    
+    tablelist = ReadNames()
+    for name in tablelist:
+        name = ''.join(name)
+        try:
+            sensorTest(name)
+        except:
+            cursor.execute("DELETE FROM Sensors WHERE Tag_Name = (?)", (name,))
+            logger("Deleting old tag from database - {0}".format(name))
+    
     logger('CompareSensors complete!')
 
 def CommitClose():

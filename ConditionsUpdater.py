@@ -14,11 +14,8 @@ nameList = ReadNames()
 logger('Writing conditions to database')
 for sensor in nameList:
 
-  str_sensor = ''.join(sensor)
-
-  str_value = CurrentValue(str_sensor) #requests current values of sensors as a string
-
-  WriteCondition(str_sensor, str_value, Conditions(str_value))
+    str_sensor = ''.join(sensor)
+    WriteCondition(str_sensor, Conditions(str_sensor))
 
 CommitClose()
 

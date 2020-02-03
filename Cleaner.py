@@ -6,7 +6,7 @@ def cleaner():
     """takes today's date and calculates date of "dayskept" days ago
     then rewrites logs made after that date"""
 
-    dayskept = 365 #number of days logs to keep
+    dayskept = 1 #number of days logs to keep
     
     date = datetime.datetime.today()
 
@@ -42,34 +42,27 @@ def cleaner():
         day = int(line[8:10]) #extracting times from the log lines
         month = int(line[5:7])
         year = int(line[0:4])
-        print("log date {0}/{1}/{2}".format(month,day,year))
 
         if year < removeyear: #logic to figure out if a log is before or after
             count = count + 1 #Ignore the line, does NOT write
-            print("year")
 
         elif year == removeyear:
 
             if month < removemonth:
                 count = count + 1
-                print("month")
 
             elif month == removemonth:
 
                 if day < removeday:
                     count = count + 1
-                    print("day")
 
         #If no conditions are met, write the line
                 else:
                     f.write(line)
-                    print("write")
             else:
                 f.write(line)
-                print("write")
         else:
             f.write(line)
-            print("write")
 
     f.close()
     logger("Cleaner overwrote {0} enteries older than {1}/{2}/{3}".format(count,removemonth,removeday,removeyear))

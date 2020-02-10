@@ -1,10 +1,12 @@
 import sqlite3
+from flask import g
 from PiConnection import *
 from Conditions import *
 from Logging import *
 
 conn = sqlite3.connect('SensorFlags.db')
 cursor = conn.cursor()
+logger("Connected to database")
 
 def WriteInitial(name, descriptor, flag, uom, typical):
     try:
@@ -20,12 +22,18 @@ def WriteCondition(name, condition):
         values = (condition, name)
         cursor.execute(commandstring, values)
     except:
-        logger("No table! This should never happen.")
+        logger("Error adding condition to table.")
 
 def ReadNames():
     cursor.execute('''SELECT Tag_Name FROM Sensors WHERE Flag != "PI"''')
     nameList = cursor.fetchall()
     return(nameList)
+
+def ReadRecord(sensor):
+    cursor.execute('SELECT * FROM Sensors WHERE Tag_Name = ?', (sensor,))
+    recordList = cursor.fetchall()
+    return(recordList)
+    
 
 def PassCommand(commandstring, values):
     cursor.execute(commandtring, values)

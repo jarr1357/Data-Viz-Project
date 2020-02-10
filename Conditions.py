@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
 from PiConnection import *
 
+dayspast = 1
+
 def YellowCon(sensor):
 
-  dayspast = 10
   value = CurrentValue(sensor)
 
   try:
@@ -34,13 +35,15 @@ def RedCon(sensor):
   return(condition)
 
 def Conditions(sensor):
+    
+  value = CurrentValue(sensor)
 
   if RedCon(sensor):
     condition = 'RED'
   elif YellowCon(sensor) == 1:
-    condition = 'YELLOW - AVG'
+    condition = 'YELLOW - AVG at {0}'.format(str((GetAvg(sensor,dayspast)/value)*100))
   elif YellowCon(sensor) == 2:
-    condition = 'YELLOW - PG'
+    condition = 'YELLOW - PG at {0}'.format(str(GetPG(sensor,dayspast)))
   else:
     condition = 'GREEN'
 

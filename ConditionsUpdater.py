@@ -3,6 +3,7 @@ from DatabaseConnection import *
 from Conditions import *
 from Logging import *
 
+import json
 
 try:
   CompareSensors()
@@ -15,7 +16,8 @@ logger('Writing conditions to database')
 for sensor in nameList:
 
     str_sensor = ''.join(sensor)
-    WriteCondition(str_sensor, Conditions(str_sensor))
-
+    condition = Conditions(str_sensor)
+    
+    WriteCondition(str_sensor, condition)
+    
 CommitClose()
-

@@ -5,8 +5,6 @@ Created on Mon Feb 10 20:05:54 2020
 @author: Mike
 """
 
-#To do: add traces for solar power from real time at college.
-
 import time
 import pandas as pd
 import plotly.graph_objects as go
@@ -14,15 +12,15 @@ import plotly.io as pio
 
 pio.renderers.default = "browser"
 
-TotalHours = 12    #Used to determine how many charts will be created. 1 per hour
-Line = 2         #Refers to the line in the .csv (while open in excel)
+TotalHours = 1    #Used to determine how many charts will be created. 1 per hour
+Line = 178         #Refers to the line in the .csv (while open in excel)
 Hour = (Line - 2) #This will be used to reference a row in the .csv. Hours are all sequential so hours can be used to 
-                  #reference the day as well. The Line in the .scv is offset by -2
+                  #reference the day as well. The Line in the .csv is offset by -2
+
 SensorData = pd.read_csv('ACData_Jan2020.csv') #This loads the .csv for Jan 2020 into a pandas dataframe
 
 #This for loop will generate a number of charts based on the given days
 for i in range(TotalHours):    
-  
   
   CurrentHour = SensorData.iloc[Hour,1]
   
@@ -99,14 +97,14 @@ for i in range(TotalHours):
   ))])
 
   #This block of code updates the title, font size and title offset of the chart.
-  fig.update_layout(title_text= ("Algonquin College Power Usage at {0}:00h Jan, {1} 2020 (In KW)" 
+  fig.update_layout(title_text= ("Algonquin College Power Usage at {0}:00 Jan, {1} 2020 (In KW)" 
                                  .format(str(SensorData.iloc[Hour,1]).split(":")[0],
                                  str(SensorData.iloc[Hour,0]).split("-")[1])),
-                    font_size=10, 
+                    font_size=8, 
                     title_x = 0.5) #title_x of 0.5 centers the title
   
   #Outputs the chart to the image files.
-  FileName = ("SankeyFig%d.png" %(i+1))
+  FileName = ("SankeyFig%d.svg" %(i+1))
   fig.write_image(FileName)
 
   Hour += 1 #(Increments the hour)

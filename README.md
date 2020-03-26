@@ -4,7 +4,7 @@ This project is designed to recall data from OSIsoft Pi systems of Algonquin Col
 
 ConditionsUpdater coordinates data requests and comparisons to determine sensor health.
 
-PiConnection is responsible for communicating with the Pi system.
+PiConnection is responsible for communicating with the PI server.
 
 DatabaseConnection is responsible for talking with the SQL database.
 

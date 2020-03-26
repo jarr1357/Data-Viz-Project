@@ -27,14 +27,14 @@ logger("piServer is {0}".format(piServer))
 def sensorTest(sensor):
     pt = PIPoint.FindPIPoint(piServer, sensor)
     
-#Connecting to PiServer
+#Connecting to PiServer and checking network stability
 def Connection(sensor):
     timer = 1
     while True:
         try:
             pt = PIPoint.FindPIPoint(piServer, sensor)
             break
-        except:
+        except: #Network unstable, start testing connection
             logger("PiServer could not be found. Retrying in {0} seconds.".format(timer))
             time.sleep(timer)
             if timer < 60:
@@ -65,7 +65,6 @@ def ReadAllTags():
 def CurrentValue(sensor): 
     pt = Connection(sensor)  
     current_value = pt.CurrentValue()
-    #print(current_value.Timestamp)
     try:
         ret_value = float(current_value.Value)
     except:
@@ -90,6 +89,7 @@ def RecordedValues(sensor, startTime, endTime):
     df = pd.DataFrame(data)
     return (df) #returns dataframe of times and values
 
+#pulls typical value from PI system
 def GetTypicalValue(sensor):
     pt = Connection(sensor)
     attr = PICommonPointAttributes.TypicalValue
@@ -99,6 +99,7 @@ def GetTypicalValue(sensor):
     pt.LoadAttributes(attr_list)
     return(pt.GetAttribute(attr))
 
+#pulls engineering units from PI system
 def GetEU(sensor):
     pt = Connection(sensor)
     attr = PICommonPointAttributes.EngineeringUnits
@@ -108,6 +109,7 @@ def GetEU(sensor):
     pt.LoadAttributes(attr_list)
     return(pt.GetAttribute(attr))
 
+#pulls descriptor from PI system
 def GetDescriptor(sensor):
     pt = Connection(sensor)
     attr = PICommonPointAttributes.Descriptor
@@ -117,6 +119,7 @@ def GetDescriptor(sensor):
     pt.LoadAttributes(attr_list)
     return(pt.GetAttribute(attr))
 
+#pulls max value from PI system over a span of time divided into ranges where it is averaged
 def GetMax(sensor, time):
     
     span = AFTimeSpan.Parse("{0}d".format(time))
@@ -131,6 +134,7 @@ def GetMax(sensor, time):
     
     return(value)
 
+#pulls min value from PI system over a span of time divided into ranges where it is averaged
 def GetMin(sensor, time):
     
     span = AFTimeSpan.Parse("{0}d".format(time))
@@ -145,6 +149,7 @@ def GetMin(sensor, time):
     
     return(value)
 
+#pulls average value from PI system over a span of time divided into ranges where it is averaged
 def GetAvg(sensor, time):
     
     span = AFTimeSpan.Parse("{0}d".format(time))
@@ -159,6 +164,7 @@ def GetAvg(sensor, time):
     
     return(value)
 
+#pulls percent good (percentage of expected sensor reading over time) from PI system
 def GetPG(sensor, time):
     
     span = AFTimeSpan.Parse("{0}d".format(time))
@@ -173,6 +179,7 @@ def GetPG(sensor, time):
     
     return(value)
 
+#pulls standard deviation from PI system
 def GetSD(sensor, time):
     
     span = AFTimeSpan.Parse("{0}d".format(time))
@@ -186,9 +193,3 @@ def GetSD(sensor, time):
             value = float(event.Value)
     
     return(value)
-
-    
-#print(RecordedValues('ACCE.LEVEL1.PXCM11_ACCE.LLM1.VBM01.PRESENT_VALUE','2019/08/24 11:00 PM','2019/08/24 11:30 PM'))
-#print(CurrentValue('ACCE.LEVEL1.PXCM11_ACCE.LLM1.VBM01.PRESENT_VALUE'))
-
-#print(GetPG('ACCE.PH.PXCM2_ACRS.WEATHERSTATION:SOLAR_RAD.PRESENT_VALUE',100)) 
